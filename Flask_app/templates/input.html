@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{who}} Data</title>
+    <link rel="shortcut icon" href="{{ url_for('static',filename='logo.png')}}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">
+    </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">
+    </script>
+
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css" rel="stylesheet"
+        type="text/css" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        .content_right {
+            float: left;
+            width: 30%;
+        }
+
+        .clr {
+            clear: both;
+        }
+    </style>
+    <script>
+        function handleRowClick(row) {
+            var name = row.cells[0].innerHTML;
+            document.getElementById('name').value = name;
+            document.forms[0].submit();
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
+</head>
+
+<body>
+
+    <div class="container container-12">
+    <div class="row">
+
+<div class="col-md-3"> <img src="https://www.digi-val.com/assets/img/logo.svg" style="width:50%; position: relative;" /></div>
+<div class="col-md-9">
+    
+<div style=" font-weight: bold; margin-bottom: 20px; margin-left: 130px;
+ text-transform: capitalize; "><br>
+   <h2> {{who}} attendance data</h2>
+</div>
+</div>
+</div>
+
+       
+        <form method="post" target="_blank" action="/{{who}}">
+            <input style="display:none" type="text" id="name" name="name">
+            <table id="myTable">
+                <thead>
+                    <tr>
+                        {% for key in result_dict.keys() %}
+                        <th>{{ key }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in range(result_dict['Name']|length) %}
+                    <tr onclick="handleRowClick(this)" class="clickable">
+                        {% for key in result_dict.keys() %}
+                        <td>{{ result_dict[key][i] }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div style="display: flex;margin-top: 20px;">
+                <div>
+                    <a href="./student" class="btn">Student Data</a>
+                </div>
+                <div style="margin:0 0 0 63em;">
+                    <a href="./Staff" class="btn">Staff Data</a>
+                </div>
+            </div>
+    </div>
+
+    <!-- <div class="content_right" style="margin-top:10px;">
+        <div style="display: flex;">
+            <div>
+                <a href="./student" class="btn">Student Data</a>
+            </div>
+            <div style="margin:0 0 0 14em;">
+                <a href="./Staff" class="btn">Staff Data</a>
+            </div> -->
+    <style>
+        table {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td,
+        th {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        table.dataTable tbody tr:nth-child(even) {
+            background-color: #EAF3FF;
+        }
+
+        th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            background-color: #1877F2;
+            color: white;
+        }
+
+        .clickable {
+            cursor: pointer;
+        }
+    </style>
+
+    <script>
+        $(function () {
+            var names = [
+                {% for Name in Names %}
+"{{Name}}",
+            {% endfor %}
+];
+
+        $("#name").autocomplete({
+            source: names
+        });
+});
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                pageLength: 11
+            });
+        });
+    </script>
+    <style>
+                a {
+          color: #006cfa; 
+          text-decoration: none; 
+          border-radius: 20px;
+          padding: 10px 20px;
+          display: inline-block;
+        }
+    
+        a:hover {
+          color: #EAF3FF; 
+          background-color: #006cfa;
+        }
+      </style>
+          <style>
+            .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+  background: #006cfa;
+  text-decoration: none; 
+          border-radius: 7px;
+          display: inline-block;
+}
+            .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+                background:#006cfa;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+    border-radius: 7px;
+}
+
+
+.container-12 {
+    max-width: 1300px !important;
+}
+
+tbody  tr:hover {
+      background-color: #abcfff !important;
+    }
+
+
+          </style>
+</body>
+
+</html>

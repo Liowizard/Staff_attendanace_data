@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{st_name}} Attendance</title>
+    <link rel="shortcut icon" href="{{ url_for('static',filename='logo.png')}}">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">
+    </script>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">
+    </script>
+    
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css"
+      rel="stylesheet" type="text/css" />
+  
+      <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --> 
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+      <style>
+        .content_left { float: left; width: 68%;}
+        .content_right { float: left;  width: 30%;}
+        .clr {clear: both;}
+        
+    
+    </style>
+</head>
+<body>
+  <div>
+    <div class="content_left">
+
+    <form method="post" target="_blank" action="/{{who}}">
+<br>
+        <label for="name">Enter name:</label>
+        <input type="text" id="name" name="name">
+        <button type="submit">Submit</button>
+        <script>
+            $(function() {
+                var names = [
+		{% for Name in Names %}
+			"{{Name}}",
+		{% endfor %}
+	];
+            
+                $("#name").autocomplete({
+                    source: names
+                });
+            });
+            </script>
+    </form>
+  
+    <div style="width: 1000px">
+      <h3><br>
+        {{who}} Attendance Ratio <br /><br /><br><br>
+        Total classes: {{classes}}
+      </h3>
+      <div id="piechart_3d" style="width: 100%; height: 500px"></div>
+      <!-- <p>{{A_staff}}</p>
+
+        <p>{{M_staff}}</p> -->
+    </div>
+  </div>
+
+  <div style="display: flex;">
+    <div>
+    <a href="./student" class="btn">Student Data</a>
+  </div>
+    <div style="margin:0 0 0 14em;">
+    <a href="./Staff" class="btn" >Staff Data</a>
+  </div>
+</div>
+
+    <div class="content_right"><img src="https://www.digi-val.com/assets/img/cover-img.svg" style="width:100%; position: relative;" />
+      </div>
+<div class="clr"></div>
+
+  </div>
+
+    <div>
+    <h3>{{to}} counts</h3>
+    <canvas id="chart"></canvas>
+  </div>
+    
+  <script
+  type="text/javascript"
+  src="https://www.gstatic.com/charts/loader.js"
+></script>
+<script type="text/javascript">
+  google.charts.load("current", {packages:["corechart"]});
+  google.charts.setOnLoadCallback(drawChart);
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable([
+        {% for key, value in data.items() %}
+            {% if value is string %}
+                ['{{ key }}', '{{ value }}'],
+            {% else %}
+                ['{{ key }}', {{ value }}],
+            {% endif %}
+        {% endfor %}
+    ]);
+
+    var options = {
+      title: "{{st_name}}",
+      is3D: true,
+      //pieHole: 0.5
+      pieStartAngle: 100
+      /*slices: {
+        2: {offset: 0.2},
+        3: {offset: 0.3}
+      }*/
+      /*slices: {
+        1: { color: 'transparent' }
+      }*/
+    };
+
+    var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+    chart.draw(data, options);
+  }
+</script>
+
+
+<script>
+  $(document).ready(function() {
+    var labels = [];
+    var values = [];
+    {% for name, count in M_staff.items() %}
+    // var spliter=name.replace("&#39;","")
+    console.log('name',name)
+      labels.push('{{ name }}');
+      values.push({{ count }});
+    {% endfor %}
+console.log({labels:labels.map((s) => s.replaceAll('&#39;','')),labels2:labels,values  })
+    var ctx = document.getElementById('chart').getContext('2d');
+    var chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels:labels.map((s) => s.replaceAll('&#39;','')),
+        datasets: [{
+          label: 'Count',
+          data: values,
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        }
+      }
+    });
+  });
+</script>
+<br>
+<style>  
+.tb {
+  border-collapse: collapse;
+  margin: auto;
+  width: 90%; /* Add this line to set a maximum width for the table */
+}
+
+.tb th,
+.tb td {
+  padding: 10px;
+  border: solid 1px #EAF3FF;
+}
+
+.tb th {
+  background-color: #1877F2;
+  color: #fff;
+  font-weight: bold;
+}
+
+.tb tr:nth-child(even) {
+  background-color: #EAF3FF;
+}
+
+/* .tb tr:hover {
+  background-color: #d1e6ff;
+} */
+
+.tb td:first-child {
+  border-radius: 5px 0 0 5px;
+}
+
+.tb td:last-child {
+  border-radius: 0 5px 5px 0;
+}
+
+
+  </style>  
+  <br><br>
+<table id="myTable" class="tb" style="width:400px;">
+  <tr>
+    <th>{{to}}_Name</th>
+    <th>Manual_count</th>
+  </tr>
+  {% for key, value in M_staff_all.items() %}
+    <tr>
+      <td>{{ key }}</td>
+      <td>{{ value }}</td>
+    </tr>
+  {% endfor %}
+</table>
+
+</body>
+</html>
