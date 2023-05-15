@@ -158,56 +158,115 @@ console.log({labels:labels.map((s) => s.replaceAll('&#39;','')),labels2:labels,v
   });
 </script>
 <br>
-<style>  
-.tb {
-  border-collapse: collapse;
-  margin: auto;
-  width: 90%; /* Add this line to set a maximum width for the table */
-}
+<style>
+  .table-container {
+      max-height: 650px;
+      overflow-y: scroll;
+  }
 
-.tb th,
-.tb td {
-  padding: 10px;
-  border: solid 1px #EAF3FF;
-}
+  .tb {
+      border-collapse: collapse;
+      margin: auto;
+      width: 90%;
+  }
 
-.tb th {
-  background-color: #1877F2;
-  color: #fff;
-  font-weight: bold;
-}
+  .tb th,
+  .tb td {
+      padding: 10px;
+      border: solid 1px #EAF3FF;
+  }
 
-.tb tr:nth-child(even) {
-  background-color: #EAF3FF;
-}
+  .tb th {
+      background-color: #1877F2;
+      color: #fff;
+      font-weight: bold;
+      position: sticky;
+      top: 0;
+  }
 
-/* .tb tr:hover {
-  background-color: #d1e6ff;
-} */
+  .tb tr:nth-child(even) {
+      background-color: #EAF3FF;
+  }
 
-.tb td:first-child {
-  border-radius: 5px 0 0 5px;
-}
+  .tb td:first-child {
+      border-radius: 5px 0 0 5px;
+  }
 
-.tb td:last-child {
-  border-radius: 0 5px 5px 0;
-}
+  .tb td:last-child {
+      border-radius: 0 5px 5px 0;
+  }
+  table.tb tr:hover {
+        background-color: #daeaff;
+        cursor: pointer;
+    }
+  .reference-button {
+    background-color: #1877F2; /* Set the background color */
+    color: #FFFFFF; /* Set the text color */
+    /* Add any other desired styles */
+  }
+</style>
+</style>
+<script>
+  window.addEventListener("DOMContentLoaded", () => {
+      const tableContainer = document.querySelector(".table-container");
+      const tableHeader = tableContainer.querySelector("thead");
+      const tableColumns = Array.from(tableContainer.querySelectorAll("th"));
 
+      tableContainer.addEventListener("scroll", () => {
+          const scrollLeft = tableContainer.scrollLeft;
+          tableHeader.style.transform = `translateX(-${scrollLeft}px)`;
+          tableColumns.forEach((column) => {
+              column.style.transform = `translateX(${scrollLeft}px)`;
+          });
+      });
+  });
+</script>
+</head>
+<body>
+<h2>Each session details</h2>
+<h2>Pls click a specific row for an comparison with a same date and Infrastructure</h2>
+<div class="table-container">
+  <table id="myTable" class="tb">
+    <thead>
+      <tr>
+        <th>Buttons</th> <!-- New column for the button -->
+        {% for column in Session_Data_columns %}
+        <th>{{ column }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for index, row in All_Session_Data.iterrows() %}
+      <tr onclick="fillFormAndSubmit('{{ row.Session_Date }}', '{{ row.infra_name }}')">
+        <td>
+          <button class="reference-button" onclick="referenceFunction('{{ row.Session_Date }}', '{{ row.infra_name }}')">To_Compare with infra</button>
+        </td> <!-- Button column -->
+        {% for column in Session_Data_columns %}
+        <td>{{ row[column] }}</td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<script>
+  function fillFormAndSubmit(date, name) {
+    document.getElementById('date-input').value = date;
+    document.getElementById('name-input').value = name;
+    document.getElementById('myForm').submit();
+  }
 
-  </style>  
-  <br><br>
-<table id="myTable" class="tb" style="width:400px;">
-  <tr>
-    <th>{{to}}_Name</th>
-    <th>Manual_count</th>
-  </tr>
-  {% for key, value in M_staff_all.items() %}
-    <tr>
-      <td>{{ key }}</td>
-      <td>{{ value }}</td>
-    </tr>
-  {% endfor %}
-</table>
+  function referenceFunction(date, name) {
+    // Perform reference function here
+    console.log('Reference clicked:', date, name);
+  }
+</script>
+
+<form id="myForm" method="POST" action="/">
+  <input type="hidden" name="date" id="date-input">
+  <input type="hidden" name="name" id="name-input">
+</form>
+
 
 </body>
-</html>
+</html> 

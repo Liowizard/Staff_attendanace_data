@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Session details</title>
+    <link
+      rel="shortcut icon"
+      href="{{ url_for('static',filename='logo.png')}}"
+    />
+    <style>
+      .table-container {
+        max-height: 600px;
+        overflow-y: scroll;
+      }
+      table {
+        margin-top: 20px;
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      th,
+      td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+
+      th {
+        background-color: #1877f2;
+        position: sticky;
+        color: #fff;
+        font-weight: bold;
+        top: 0;
+        z-index: 1;
+      }
+
+      tr:hover {
+        background-color: #daeaff;
+      }
+
+      caption {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      tr:nth-child(even) {
+        background-color: #eaf3ff;
+      }
+
+      tr {
+        height: 40px; /* Adjust the row height as desired */
+      }
+      /* 
+        .sticky-header th {
+        background-color: #1877F2;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        color: #fff;
+        font-weight: bold;
+    } */
+    </style>
+  </head>
+  <body>
+    <div
+      style="
+        justify-content: center;
+        align-items: center !important;
+        margin-top: 30px;
+      "
+    >
+      <div><h3>Sum of auto : {{ auto_p_sum }}</h3></div>
+      <h3> Sum of manual: {{ manual_p_sum }}</h3>
+    </div>
+
+    <div
+      style="
+        display: flex;
+        justify-content: left;
+        margin-right: 800px;
+        align-items: center;
+        margin-top: 30px;
+      "
+    >
+      <canvas id="pieChart"></canvas>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      // Access the sums passed from Flask
+      var autoPSum = {{ auto_p_sum }};
+      var manualPSum = {{ manual_p_sum }};
+
+      // Create the pie chart
+      var ctx = document.getElementById('pieChart').getContext('2d');
+      new Chart(ctx, {
+          type: 'pie',
+          data: {
+              labels: ['auto_p', 'manual_p'],
+              datasets: [{
+                  data: [autoPSum, manualPSum],
+                  backgroundColor: ['rgb(24,119,242)', "rgb(255,0,0)"]
+              }]
+          },
+          options: {
+              responsive: true,
+              maintainAspectRatio: false
+          }
+      });
+    </script>
+
+    <div
+      style="
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 50px;
+      "
+    >
+      <h2>Session conducted on {{date}} using {{infra}}</h2>
+    </div>
+    <div
+      class="table-container"
+      style="overflow-x: auto; max-width: 100%; margin-top: 20px"
+    >
+      <table>
+        <thead class="sticky-header">
+          <tr>
+            {% for column in table.columns %}
+            <th>{{ column }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in table.iterrows() %}
+          <tr>
+            {% for cell in row[1] %}
+            <td>{{ cell }}</td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>

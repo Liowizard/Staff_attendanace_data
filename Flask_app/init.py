@@ -5,10 +5,32 @@ from flask import Flask , render_template,request
 app = Flask(__name__)
 
 
+All_Session_Data = pd.read_csv('All_Session_Data.csv')
+All_Session_Data= All_Session_Data.drop(All_Session_Data.columns[0], axis=1)
+infra_names = All_Session_Data["infra_name"].values.tolist()
+infra_names=set(infra_names)
+infra_names=list(infra_names)
+Session_Data_columns = All_Session_Data.columns
 
-@app.route("/") 
+
+@app.route("/", methods=['GET', 'POST']) 
 def index():
-    return render_template("start.html")
+    if request.method == 'POST':
+        date_input = request.form['date']
+        infra = request.form['name']
+        date_input=str(date_input)
+        ses_data=All_Session_Data[(All_Session_Data['Session_Date'] == date_input) & (All_Session_Data['infra_name'] ==infra)]
+        auto_p_sum = ses_data['auto_p'].sum()
+        manual_p_sum = ses_data['manual_p'].sum()
+        return  render_template("session_table.html",table=ses_data , date=date_input,
+                                infra=infra,manual_p_sum=manual_p_sum,auto_p_sum=auto_p_sum)
+    
+    return render_template("start.html",infra_names=infra_names)
+
+
+
+
+
 
 
 @app.route('/student', methods=['GET', 'POST'])
@@ -43,7 +65,9 @@ def Student_pie_chart():
 
 
 
-        return render_template('/index.html', data=data , st_name=stu_name , classes=classes,M_staff=M_staff ,M_staff_all=M_staff,Names=Names,who="Student",to="Staff")
+        return render_template('/index.html', data=data , st_name=stu_name , 
+                               classes=classes,M_staff=M_staff ,M_staff_all=M_staff,
+                               Names=Names,who="student",to="Staff")
     
 
     else:
@@ -66,7 +90,7 @@ def Student_pie_chart():
         data=chart_data[["Name","classes"]].assign(Auto=Auto,Manual=Manual,Auto_percentage=percentage)
         data = data.to_dict('list')
 
-        return render_template('/input.html',Names=Names,who="Student",result_dict=data)
+        return render_template('/input.html',Names=Names,who="student",result_dict=data)
     
 
 
@@ -78,6 +102,7 @@ def Staff_pie_chart():
 
     if request.method == 'POST':
         staff_name = request.form['name']
+        Session_Data=All_Session_Data.loc[All_Session_Data['Primary_staff'] ==staff_name]
         staff_data = chart_data[['all_student', staff_name]]
         pie=staff_data[staff_name][1]
         pie_value=pie[1:-1]
@@ -102,10 +127,11 @@ def Staff_pie_chart():
         M_staff = dict(sorted(M_staff_all.items(), key=lambda x: x[1], reverse=True)[:20])
         
 
-    
 
-
-        return render_template('/index.html', data=data , st_name=staff_name , classes=classes,M_staff=M_staff ,Names=all_staff_name,M_staff_all=M_staff_all,who="Staff",to="Student")
+        return render_template('/index.html', data=data , st_name=staff_name , classes=classes,
+                               M_staff=M_staff ,Names=all_staff_name,All_Session_Data=Session_Data,
+                               M_staff_all=M_staff_all,Session_Data_columns=Session_Data_columns,
+                               who="Staff",to="Student")
     
     else:
 
@@ -133,7 +159,8 @@ def Staff_pie_chart():
             per=str(round(per, 1))+"%"
             percentage.append(per)
 
-            df = pd.DataFrame(list(zip(all_staff_name, classes,Auto,Manual,percentage)),columns =['Name', 'classes',"Auto","Manual","Auto_percentage"])
+            df = pd.DataFrame(list(zip(all_staff_name, classes,Auto,Manual,percentage)),
+                              columns =['Name', 'classes',"Auto","Manual","Auto_percentage"])
             df['Auto_percentage'] = pd.to_numeric(df['Auto_percentage'].str.rstrip('%'))
             data = df.sort_values(by='Auto_percentage')
             data['Auto_percentage'] = data['Auto_percentage'].astype(str) + '%'

@@ -1,21 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css">
     <title>Attendance_Mode</title>
-    <link rel="shortcut icon" href="{{ url_for('static',filename='logo.png')}}">
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+      $(document).ready(function() {
+          var infraNames = {{ infra_names | tojson }};
+          
+          // Enable autofill functionality
+          $('#name-input').autocomplete({
+              source: infraNames
+          });
+      });
+  </script>
 
-    <!-- <link rel="icon" href="/youtube/images/hd-youtube-logo-png-transparent-background-20.png" type="image/x-icon"> -->
+    <link
+      rel="shortcut icon"
+      href="{{ url_for('static',filename='logo.png')}}"
+    />
+    <style>
+      body {
+          font-family: Arial, sans-serif;
+          background-image: url("/static/loginbg.svg"); 
+          background-color: #569efd;
+      }
+
+      h1 {
+          text-align: center;
+      }
+
+      .form-container {
+          max-width: 400px;
+          margin: 0 auto;
+          padding: 20px;
+          background-color: #ffffff;
+          border-radius: 5px;
+          box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      label {
+          display: block;
+          margin-bottom: 10px;
+      }
+
+      input[type="date"],
+      input[type="text"] {
+          width: 100%;
+          padding: 8px;
+          border-radius: 3px;
+          border: 1px solid #ccc;
+          box-sizing: border-box;
+      }
+
+      input[type="submit"] {
+          width: 100%;
+          padding: 10px;
+          background-color: #1877f2;
+          color: #ffffff;
+          border: none;
+          border-radius: 3px;
+          cursor: pointer;
+      }
+
+      input[type="submit"]:hover {
+          background-color: blue;
+      }
+  </style>
+
     <style>
       a:link,
       a:visited {
+        margin-bottom: 5px;
         background-color: #1877f2;
         color: white;
-        padding: 14px 25px;
+        padding: 6px 4px;
         text-align: center;
         text-decoration: none;
         display: inline-block;
@@ -29,32 +94,45 @@
     </style>
   </head>
   <body>
-    <div style=" font-weight: bold;text-align: center;margin-top: 10ex ;
- text-transform: capitalize; "><h2>Attendance Mode</h2><br>
-   
-</div>
-
     <div
       style="
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-top: 20px;
+        font-weight: bold;
+        text-align: center;
+        margin-top: 10ex;
+        text-transform: capitalize;
       "
     >
-      <div>
-        <a href="./student" class="btn">Student Data</a>
-      </div>
-      <div style="margin: 0 0 0 12em">
-        <a href="./Staff" class="btn">Staff Data</a>
-      </div>
+      <!-- <h2>Attendance Mode</h2> -->
       <br />
     </div>
-    <div style="margin-top: 30px; display: flex; justify-content: center">
-      <img
-        src="https://www.digi-val.com/assets/img/cover-img.svg"
-        style="width: 35%"
-      />
+
+    <div class="form-container">
+      <div style="display: flex;justify-content: center;margin-bottom: 10px;">
+        <img src="https://www.digi-val.com/assets/img/logo.svg" alt="">
+      </div>  
+      <form method="POST">
+        <label for="date">Date:</label>
+        <input type="date" name="date" required ><br><br>
+        <label for="name">Infra_name:</label>
+        <input type="text" id="name-input" name="name" autocomplete="off"><br><br>
+        <input type="submit" value="Submit">
+    </form>
+        <div
+        style="
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-top: 40px;
+        "
+      >
+        <div>
+          <a href="./student" class="btn">Student Data</a>
+        </div>
+        <div style="margin: 0 0 0 13.7em">
+          <a href="./Staff" class="btn">Staff Data</a>
+        </div>
+        <br />
+      </div>
     </div>
   </body>
 </html>
