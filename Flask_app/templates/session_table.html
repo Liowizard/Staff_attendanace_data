@@ -53,7 +53,7 @@
     </style>
   </head>
   <body>
-    <div style="text-align: right; margin-right: 50px; margin-top: 50px;">
+    <div style="text-align: right; margin-right: 50px; margin-top: 30px;">
     <a href="/">
     <img src="https://www.digi-val.com/assets/img/logo.svg" alt="" /></a></div>
     <div
@@ -109,10 +109,7 @@
     >
       <h2>Session conducted on {{date}} using {{infra}}</h2>
     </div>
-    <div
-      class="table-container"
-      style="overflow-x: auto; max-width: 100%; margin-top: 20px"
-    >
+    <div class="table-container" style="overflow-x: auto; max-width: 100%; margin-top: 20px">
       <table>
         <thead class="sticky-header">
           <tr>
@@ -123,7 +120,7 @@
         </thead>
         <tbody>
           {% for row in table.iterrows() %}
-          <tr>
+          <tr onclick="submitForm(this)">
             {% for cell in row[1] %}
             <td>{{ cell }}</td>
             {% endfor %}
@@ -131,3 +128,33 @@
           {% endfor %}
         </tbody>
       </table>
+    </div>
+    
+    <script>
+      function submitForm(row) {
+        var cells = row.getElementsByTagName('td');
+        var dateValue = cells[0].innerText; // Assuming the date is in the first column
+        var nameValue = cells[1].innerText; // Assuming the name is in the second column
+        
+        var form = document.createElement('form');
+        form.method = 'POST';
+        
+        var dateInput = document.createElement('input');
+        dateInput.type = 'hidden';
+        dateInput.name = 'date';
+        dateInput.value = dateValue;
+        form.appendChild(dateInput);
+        
+        var nameInput = document.createElement('input');
+        nameInput.type = 'hidden';
+        nameInput.name = 'name';
+        nameInput.value = nameValue;
+        form.appendChild(nameInput);
+        
+        document.body.appendChild(form);
+        form.submit();
+      }
+    </script>
+    
+  </body>
+</html>
