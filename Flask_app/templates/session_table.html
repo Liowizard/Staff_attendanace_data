@@ -48,80 +48,56 @@
       }
 
       tr {
-        height: 40px;
+        height: 40px; /* Adjust the row height as desired */
       }
     </style>
-    <div
-      style="
-        display: flex;
-        justify-content: right;
-        margin-right: 60px;
-        margin-top: 30px;
-      "
-    >
-      <a href="/"
-        ><img src="https://www.digi-val.com/assets/img/logo.svg" alt=""
-      /></a>
-    </div>
   </head>
   <body>
+    <div style="text-align: right; margin-right: 50px; margin-top: 50px;">
+    <a href="/">
+    <img src="https://www.digi-val.com/assets/img/logo.svg" alt="" /></a></div>
     <div
       style="
         justify-content: center;
         align-items: center !important;
-        margin-top: 30px;
-        margin-top: -79px;
+        margin-top: -80px;
       "
     >
-      <h2>Number of Sessions conducted: {{number_of_sessions}}</h2>
-      <div><h3>Sum of auto : {{ auto_p_sum }}</h3></div>
-      <h3>Sum of manual: {{ manual_p_sum }}</h3>
+      <div>
+        <h2>Total session: {{number_of_sessions}}</h2>
+        <h3>Sum of auto : {{ auto_p_sum }}</h3></div>
+      <h3> Sum of manual: {{ manual_p_sum }}</h3>
     </div>
 
-    <div
-      style="
-        display: flex;
-        justify-content: left;
-        margin-right: 800px;
-        align-items: center;
-        margin-top: 60px;
-      "
-    >
+    <div style="display: flex; justify-content: left; margin-right: 800px; align-items: center; margin-top: 50px;">
       <canvas id="donutChart"></canvas>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
       // Access the sums passed from Flask
       var autoPSum = {{ auto_p_sum }};
       var manualPSum = {{ manual_p_sum }};
-
+  
       // Create the donut chart
       var ctx = document.getElementById('donutChart').getContext('2d');
       new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          labels: ['auto present', 'manual present'],
-          datasets: [
-            {
-              data: [autoPSum, manualPSum],
-              backgroundColor: ['rgb(24,119,242)', 'rgb(255,0,0)'],
-              hoverOffset: 15, // Add a small hover offset
-            },
-          ],
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          cutout: '50%', // Adjust the cutout percentage for the donut shape
-          plugins: {
-            legend: {
-              display: true, // You can choose to display or hide the legend as needed
-            },
+          type: 'doughnut',
+          data: {
+              labels: ['auto_p', 'manual_p'],
+              datasets: [{
+                  data: [autoPSum, manualPSum],
+                  backgroundColor: ['rgb(24, 119, 242)', 'rgb(255, 0, 0)']
+              }]
           },
-        },
+          options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              cutoutPercentage: 500 // Adjust this value to change the size of the hole in the center (in percentage)
+          }
       });
-    </script>
+  </script>
+  
 
     <div
       style="
@@ -155,31 +131,3 @@
           {% endfor %}
         </tbody>
       </table>
-    </div>
-    <form id="myForm" method="POST" action="/">
-      <input type="hidden" name="date" id="date-input" />
-      <input type="hidden" name="name" id="name-input" />
-    </form>
-
-    <script>
-      // Get all the table rows
-      const rows = document.querySelectorAll(".table-container tbody tr");
-
-      // Add click event listener to each row
-      rows.forEach((row) => {
-        row.addEventListener("click", () => {
-          // Get the values from session_date and infra_name cells
-          const sessionDate = row.querySelector("td:nth-child(1)").textContent;
-          const infraName = row.querySelector("td:nth-child(2)").textContent;
-
-          // Set the values in the form
-          document.getElementById("date-input").value = sessionDate;
-          document.getElementById("name-input").value = infraName;
-
-          // Submit the form
-          document.getElementById("myForm").submit();
-        });
-      });
-    </script>
-  </body>
-</html>
