@@ -72,7 +72,7 @@
   </div>
 </div>
 
-    <div class="content_right"><img src="https://www.digi-val.com/assets/img/cover-img.svg" style="width:100%; position: relative;" />
+    <div class="content_right"><a href="/"><img src="https://www.digi-val.com/assets/img/cover-img.svg" style="width:100%; position: relative;" /></a>
       </div>
 <div class="clr"></div>
 
@@ -104,15 +104,7 @@
     var options = {
       title: "{{st_name}}",
       is3D: true,
-      //pieHole: 0.5
       pieStartAngle: 100
-      /*slices: {
-        2: {offset: 0.2},
-        3: {offset: 0.3}
-      }*/
-      /*slices: {
-        1: { color: 'transparent' }
-      }*/
     };
 
     var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
@@ -206,6 +198,7 @@ console.log({labels:labels.map((s) => s.replaceAll('&#39;','')),labels2:labels,v
   }
 </style>
 </style>
+{% if All_Session_Data is defined and not All_Session_Data.empty %}
 <script>
   window.addEventListener("DOMContentLoaded", () => {
       const tableContainer = document.querySelector(".table-container");
@@ -223,8 +216,7 @@ console.log({labels:labels.map((s) => s.replaceAll('&#39;','')),labels2:labels,v
 </script>
 </head>
 <body>
-<h2>Each session details</h2>
-<h2>Pls click a specific row for an comparison with a same date and Infrastructure</h2>
+<h2>All sessions by {{st_name}}</h2>
 <div class="table-container">
   <table id="myTable" class="tb">
     <thead>
@@ -266,7 +258,7 @@ console.log({labels:labels.map((s) => s.replaceAll('&#39;','')),labels2:labels,v
   <input type="hidden" name="date" id="date-input">
   <input type="hidden" name="name" id="name-input">
 </form>
-
+{% endif %}
 
 </body>
 </html> 

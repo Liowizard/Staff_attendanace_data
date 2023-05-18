@@ -7,23 +7,30 @@ app = Flask(__name__)
 
 All_Session_Data = pd.read_csv('All_Session_Data.csv')
 All_Session_Data= All_Session_Data.drop(All_Session_Data.columns[0], axis=1)
-infra_names = All_Session_Data["infra_name"].values.tolist()
-infra_names=set(infra_names)
-infra_names=list(infra_names)
 Session_Data_columns = All_Session_Data.columns
 
 
 @app.route("/", methods=['GET', 'POST']) 
 def index():
+
+    infra_names = All_Session_Data["infra_name"].values.tolist()
+    infra_names=set(infra_names)
+    infra_names=list(infra_names)
     if request.method == 'POST':
         date_input = request.form['date']
         infra = request.form['name']
         date_input=str(date_input)
-        ses_data=All_Session_Data[(All_Session_Data['Session_Date'] == date_input) & (All_Session_Data['infra_name'] ==infra)]
-        auto_p_sum = ses_data['auto_p'].sum()
-        manual_p_sum = ses_data['manual_p'].sum()
+        if infra =="":
+             ses_data=All_Session_Data[All_Session_Data['Session_Date'] == date_input]
+        else:
+            ses_data=All_Session_Data[(All_Session_Data['Session_Date'] == date_input) & (All_Session_Data['infra_name'] ==infra)]
+        auto_p_sum = ses_data['auto present'].sum()
+        manual_p_sum = ses_data['manual present '].sum()
+        number_of_sessions=(ses_data.shape)[0]
+        print(date_input,infra)
         return  render_template("session_table.html",table=ses_data , date=date_input,
-                                infra=infra,manual_p_sum=manual_p_sum,auto_p_sum=auto_p_sum)
+                                infra=infra,manual_p_sum=manual_p_sum,auto_p_sum=auto_p_sum,
+                                number_of_sessions=number_of_sessions)
     
     return render_template("start.html",infra_names=infra_names)
 
