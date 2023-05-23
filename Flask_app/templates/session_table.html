@@ -6,51 +6,59 @@
       rel="shortcut icon"
       href="{{ url_for('static',filename='logo.png')}}"
     />
-    <style>
-      .table-container {
-        max-height: 600px;
-        overflow-y: scroll;
-      }
-      table {
-        margin-top: 20px;
-        border-collapse: collapse;
-        width: 100%;
-      }
 
-      th,
-      td {
-        padding: 15px;
-        text-align: left;
-        border-bottom: 1px solid #ddd;
-      }
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
 
-      th {
-        background-color: #1877f2;
-        position: sticky;
-        color: #fff;
-        font-weight: bold;
-        top: 0;
-        z-index: 1;
-      }
+<style>
+  .table-container {
+      max-height: 650px;
+      overflow-y: scroll;
+  }
 
-      tr:hover {
+  .tb {
+      border-collapse: collapse;
+      margin: auto;
+      width: 90%;
+  }
+
+  .tb th,
+  .tb td {
+      padding: 10px;
+      border: solid 1px #EAF3FF;
+  }
+
+  .tb th {
+      background-color: #1877F2;
+      color: #fff;
+      font-weight: bold;
+      position: sticky;
+      top: 0;
+  }
+
+  .tb tr:nth-child(even) {
+      background-color: #EAF3FF;
+  }
+
+  .tb td:first-child {
+      border-radius: 5px 0 0 5px;
+  }
+
+  .tb td:last-child {
+      border-radius: 0 5px 5px 0;
+  }
+  table.tb tr:hover {
         background-color: #daeaff;
-      }
+        cursor: pointer;
+    }
+  .reference-button {
+    background-color: #1877F2; /* Set the background color */
+    color: #FFFFFF; /* Set the text color */
+    /* Add any other desired styles */
+  }
+</style>
 
-      caption {
-        font-size: 18px;
-        font-weight: bold;
-        margin-bottom: 10px;
-      }
-
-      tr:nth-child(even) {
-        background-color: #eaf3ff;
-      }
-
-      tr {
-        height: 40px; /* Adjust the row height as desired */
-      }
-    </style>
   </head>
   <body>
     <div style="text-align: right; margin-right: 50px; margin-top: 30px;">
@@ -110,8 +118,8 @@
       <h2>Session conducted on {{date}} using {{infra}}</h2>
     </div>
     <div class="table-container" style="overflow-x: auto; max-width: 100%; margin-top: 20px">
-      <table>
-        <thead class="sticky-header">
+      <table id="myTable" class="tb">
+        <thead>
           <tr>
             {% for column in table.columns %}
             <th>{{ column }}</th>
@@ -155,6 +163,16 @@
         form.submit();
       }
     </script>
+
+<script>
+  $(document).ready(function() {
+    $('#myTable').DataTable({
+      pageLength: 100
+    });
+  });
+</script>
+
+
     
   </body>
 </html>
