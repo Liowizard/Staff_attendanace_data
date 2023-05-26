@@ -7,6 +7,7 @@ app = Flask(__name__)
 
 All_Session_Data = pd.read_csv('./All_Session_Data.csv')
 All_Session_Data= All_Session_Data.drop(All_Session_Data.columns[0], axis=1)
+#All_Session_Data= All_Session_Data.drop(All_Session_Data.columns[0], axis=1)
 Session_Data_columns = All_Session_Data.columns
 
 
