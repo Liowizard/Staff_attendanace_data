@@ -7,63 +7,67 @@
       href="{{ url_for('static',filename='logo.png')}}"
     />
 
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
 
-<style>
-  .table-container {
-      max-height: 650px;
-      overflow-y: scroll;
-  }
+    <style>
+      .table-container {
+        max-height: 650px;
+        overflow-y: scroll;
+      }
 
-  .tb {
-      border-collapse: collapse;
-      margin: auto;
-      width: 90%;
-  }
+      .tb {
+        border-collapse: collapse;
+        margin: auto;
+        width: 90%;
+      }
 
-  .tb th,
-  .tb td {
-      padding: 10px;
-      border: solid 1px #EAF3FF;
-  }
+      .tb th,
+      .tb td {
+        padding: 10px;
+        border: solid 1px #eaf3ff;
+      }
 
-  .tb th {
-      background-color: #1877F2;
-      color: #fff;
-      font-weight: bold;
-      position: sticky;
-      top: 0;
-  }
+      .tb th {
+        background-color: #1877f2;
+        color: #fff;
+        font-weight: bold;
+        position: sticky;
+        top: 0;
+      }
 
-  .tb tr:nth-child(even) {
-      background-color: #EAF3FF;
-  }
+      .tb tr:nth-child(even) {
+        background-color: #eaf3ff;
+      }
 
-  .tb td:first-child {
-      border-radius: 5px 0 0 5px;
-  }
+      .tb td:first-child {
+        border-radius: 5px 0 0 5px;
+      }
 
-  .tb td:last-child {
-      border-radius: 0 5px 5px 0;
-  }
-  table.tb tr:hover {
+      .tb td:last-child {
+        border-radius: 0 5px 5px 0;
+      }
+      table.tb tr:hover {
         background-color: #daeaff;
         cursor: pointer;
-    }
-  .reference-button {
-    background-color: #1877F2; /* Set the background color */
-    color: #FFFFFF; /* Set the text color */
-    /* Add any other desired styles */
-  }
-</style>
-
+      }
+      .reference-button {
+        background-color: #1877f2; /* Set the background color */
+        color: #ffffff; /* Set the text color */
+        /* Add any other desired styles */
+      }
+    </style>
   </head>
   <body>
-    <div style="text-align: right; margin-right: 50px; margin-top: 30px;">
-    <a href="/">
-    <img src="https://www.digi-val.com/assets/img/logo.svg" alt="" /></a></div>
+    <div style="text-align: right; margin-right: 50px; margin-top: 30px">
+      <a href="/">
+        <img src="https://www.digi-val.com/assets/img/logo.svg" alt=""
+      /></a>
+    </div>
     <div
       style="
         justify-content: center;
@@ -73,20 +77,29 @@
     >
       <div>
         <h2>Total session: {{number_of_sessions}}</h2>
-        <h3>Sum of auto : {{ auto_p_sum }}</h3></div>
-      <h3> Sum of manual: {{ manual_p_sum }}</h3>
+        <h3>Sum of auto : {{ auto_p_sum }}</h3>
+      </div>
+      <h3>Sum of manual: {{ manual_p_sum }}</h3>
     </div>
 
-    <div style="display: flex; justify-content: left; margin-right: 800px; align-items: center; margin-top: 50px;">
+    <div
+      style="
+        display: flex;
+        justify-content: left;
+        margin-right: 800px;
+        align-items: center;
+        margin-top: 50px;
+      "
+    >
       <canvas id="donutChart"></canvas>
-  </div>
-  
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
       // Access the sums passed from Flask
       var autoPSum = {{ auto_p_sum }};
       var manualPSum = {{ manual_p_sum }};
-  
+
       // Create the donut chart
       var ctx = document.getElementById('donutChart').getContext('2d');
       new Chart(ctx, {
@@ -104,8 +117,7 @@
               cutoutPercentage: 500 // Adjust this value to change the size of the hole in the center (in percentage)
           }
       });
-  </script>
-  
+    </script>
 
     <div
       style="
@@ -117,7 +129,10 @@
     >
       <h2>Session conducted on {{date}} using {{infra}}</h2>
     </div>
-    <div class="table-container" style="overflow-x: auto; max-width: 100%; margin-top: 20px">
+    <div
+      class="table-container"
+      style="overflow-x: auto; max-width: 100%; margin-top: 20px"
+    >
       <table id="myTable" class="tb">
         <thead>
           <tr>
@@ -137,42 +152,39 @@
         </tbody>
       </table>
     </div>
-    
+
     <script>
       function submitForm(row) {
-        var cells = row.getElementsByTagName('td');
+        var cells = row.getElementsByTagName("td");
         var dateValue = cells[0].innerText; // Assuming the date is in the first column
         var nameValue = cells[1].innerText; // Assuming the name is in the second column
-        
-        var form = document.createElement('form');
-        form.method = 'POST';
-        
-        var dateInput = document.createElement('input');
-        dateInput.type = 'hidden';
-        dateInput.name = 'date';
+
+        var form = document.createElement("form");
+        form.method = "POST";
+
+        var dateInput = document.createElement("input");
+        dateInput.type = "hidden";
+        dateInput.name = "date";
         dateInput.value = dateValue;
         form.appendChild(dateInput);
-        
-        var nameInput = document.createElement('input');
-        nameInput.type = 'hidden';
-        nameInput.name = 'name';
+
+        var nameInput = document.createElement("input");
+        nameInput.type = "hidden";
+        nameInput.name = "name";
         nameInput.value = nameValue;
         form.appendChild(nameInput);
-        
+
         document.body.appendChild(form);
         form.submit();
       }
     </script>
 
-<script>
-  $(document).ready(function() {
-    $('#myTable').DataTable({
-      pageLength: 100
-    });
-  });
-</script>
-
-
-    
+    <script>
+      $(document).ready(function () {
+        $("#myTable").DataTable({
+          pageLength: 100,
+        });
+      });
+    </script>
   </body>
 </html>

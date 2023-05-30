@@ -27,34 +27,47 @@
     
     </style>
 
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+
 
 </head>
 <body>
   <div>
     <div class="content_left">
-
-    <form method="post" target="_blank" action="/{{who}}">
 <br>
-        <label for="name">Enter name:</label>
+      <form method="post" target="_blank" action="/{{who}}">
+        <label for="name">{{who}} name: <br/></label>
         <input type="text" id="name" name="name">
-        <button type="submit">Submit</button>
         <script>
             $(function() {
                 var names = [
-		{% for Name in Names %}
-			"{{Name}}",
-		{% endfor %}
-	];
-            
+                    {% for Name in Names %}
+                    "{{Name}}",
+                    {% endfor %}
+                ];
+    
                 $("#name").autocomplete({
-                    source: names
+                    source: names,
+                    select: function(event, ui) {
+                        event.preventDefault(); // Prevent the default behavior of selecting the input value
+    
+                        // Set the selected value in the input field
+                        $("#name").val(ui.item.value);
+    
+                        // Submit the form programmatically
+                        $(this).closest("form").submit();
+                    },
+                    open: function(event, ui) {
+                        $(".ui-autocomplete").css("max-height", "200px"); // Set the maximum height for the suggestion drop-down
+                        $(".ui-autocomplete").css("overflow-y", "auto"); // Add vertical scroll when needed
+                    }
                 });
             });
-            </script>
+        </script>
     </form>
+    
   
     <div style="width: 1000px">
       <h3><br>
@@ -62,9 +75,6 @@
         Total classes: {{classes}}
       </h3>
       <div id="piechart_3d" style="width: 100%; height: 500px"></div>
-      <!-- <p>{{A_staff}}</p>
-
-        <p>{{M_staff}}</p> -->
     </div>
   </div>
 
